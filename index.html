@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif TKA Matematika Kelas 6 - Konversi Satuan Berat</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins & Fredoka -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 50%, #fce7f3 100%);
+            min-height: 100vh;
+        }
+        .font-heading {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+        .bouncy {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col justify-between min-h-screen">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-amber-400 to-orange-500 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg font-bold text-xl">
+                    <i class="fa-solid fa-weight-hanging"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-extrabold text-lg md:text-xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">MathTKA Fun!</h1>
+                    <p class="text-xs text-slate-500 font-medium">Latihan TKA SD - Satuan Berat (20 Soal)</p>
+                </div>
+            </div>
+            <div id="user-badge" class="hidden items-center space-x-2 bg-indigo-50 border border-indigo-200 text-indigo-800 px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
+                <i class="fa-solid fa-user-graduate text-indigo-600"></i>
+                <span id="badge-nama-siswa">-</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl w-full mx-auto p-4 md:p-6 my-auto flex-grow flex flex-col justify-center">
+
+        <!-- 1. LOGIN / IDENTITAS SCREEN -->
+        <div id="login-screen" class="bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-2xl border-4 border-indigo-100 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-200 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-pink-200 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+            <div class="inline-block bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider mb-3 shadow-md">
+                Kuis Interaktif TKA SD
+            </div>
+            <h2 class="font-heading text-2xl md:text-4xl font-extrabold text-indigo-900 mb-2">Konversi Satuan Berat ⚖️</h2>
+            <p class="text-slate-600 text-sm md:text-base max-w-md mx-auto mb-6">
+                Isi data dirimu untuk memulai latihan <b>20 Soal Pilihan Ganda</b> (Ton, Kuintal, Kg, Ons, dan Gram).
+            </p>
+
+            <form id="login-form" onsubmit="handleStartQuiz(event)" class="max-w-md mx-auto space-y-4 text-left">
+                <div>
+                    <label for="input-nama" class="block text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-user mr-1 text-indigo-500"></i> Nama Siswa <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="input-nama" required placeholder="Masukkan nama lengkapmu..." class="w-full px-4 py-3 rounded-2xl border-2 border-indigo-100 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 outline-none transition text-sm font-semibold text-slate-800 bg-slate-50/50">
+                </div>
+
+                <div>
+                    <label for="input-mapel" class="block text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Mata Pelajaran
+                    </label>
+                    <input type="text" id="input-mapel" value="Matematika Kelas 6 - Satuan Berat" required class="w-full px-4 py-3 rounded-2xl border-2 border-indigo-100 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 outline-none transition text-sm font-semibold text-slate-800 bg-slate-50/50">
+                </div>
+
+                <div class="bg-indigo-50 rounded-2xl p-4 border border-indigo-100 text-xs text-indigo-900 space-y-1.5">
+                    <p class="font-bold flex items-center">
+                        <i class="fa-solid fa-circle-info mr-1.5 text-indigo-600"></i> Petunjuk Kuis:
+                    </p>
+                    <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                        <li>Terdiri dari <b>20 Soal Pilihan Ganda</b>.</li>
+                        <li>Pilih 1 jawaban terbaik dari opsi A, B, C, atau D.</li>
+                        <li>Bisa memilih ulang atau melewati (skip) soal.</li>
+                        <li>Tombol <b>"Kirim Jawaban"</b> hanya ada di soal nomor 20.</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-extrabold py-3.5 px-8 rounded-2xl shadow-lg shadow-indigo-200 transform transition active:scale-95 flex items-center justify-center space-x-2 text-base cursor-pointer">
+                    <span>Mulai Kuis Sekarang</span>
+                    <i class="fa-solid fa-rocket"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- 2. QUIZ SCREEN -->
+        <div id="quiz-screen" class="hidden space-y-5">
+            <!-- Palette & Nav Status Header -->
+            <div class="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-purple-100 space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-xl">
+                        Soal <span id="current-q-num">1</span> dari 20
+                    </span>
+                    <div class="flex items-center space-x-3 text-[10px] sm:text-xs font-semibold">
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 mr-1"></span> Dijawab</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span> Dilewati</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-slate-200 mr-1"></span> Belum</span>
+                    </div>
+                </div>
+                <!-- Number Buttons Palette Grid -->
+                <div id="question-palette" class="grid grid-cols-10 gap-1.5 sm:gap-2">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-xl border border-indigo-100">
+                <!-- Story / Text -->
+                <div class="mb-6">
+                    <p id="question-text" class="text-base md:text-lg font-bold text-slate-800 leading-relaxed">
+                        <!-- Loaded dynamically -->
+                    </p>
+                </div>
+
+                <!-- Options List -->
+                <div id="options-container" class="space-y-3 mb-6">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <!-- Bottom Navigation Buttons -->
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <button id="prev-btn" onclick="prevQuestion()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-4 sm:px-5 rounded-2xl transition flex items-center space-x-2 text-xs sm:text-sm">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Sebelumnya</span>
+                    </button>
+
+                    <button id="skip-btn" onclick="skipQuestion()" class="bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold py-2.5 px-3 sm:px-4 rounded-2xl transition flex items-center space-x-1.5 text-xs sm:text-sm border border-amber-200">
+                        <span>Lewati</span>
+                        <i class="fa-solid fa-forward"></i>
+                    </button>
+
+                    <button id="next-btn" onclick="nextQuestion()" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-2.5 px-5 sm:px-6 rounded-2xl shadow-md transition flex items-center space-x-2 text-xs sm:text-sm">
+                        <span>Selanjutnya</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                    <button id="submit-btn" onclick="finishQuiz()" class="hidden bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 sm:px-7 rounded-2xl shadow-lg shadow-teal-200 transition flex items-center space-x-2 text-xs sm:text-sm cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Kirim Jawaban</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. RESULT SCREEN -->
+        <div id="result-screen" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-10 shadow-2xl border-4 border-indigo-100 text-center">
+            <div id="result-icon-container" class="w-20 h-20 mx-auto mb-3 rounded-3xl flex items-center justify-center text-4xl shadow-lg bouncy">
+                🏆
+            </div>
+            <h2 class="font-heading text-2xl md:text-3xl font-extrabold text-indigo-900 mb-1">Kuis Selesai!</h2>
+            <p id="result-predicate" class="text-xs md:text-sm font-bold text-purple-600 uppercase tracking-wider mb-6">Hasil Latihan Kamu</p>
+
+            <!-- Student Summary Info -->
+            <div class="bg-slate-50 rounded-2xl p-4 max-w-md mx-auto mb-6 border border-slate-200 text-left space-y-1.5 text-xs md:text-sm">
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Nama Siswa:</span>
+                    <span id="res-nama" class="font-bold text-slate-800"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Mata Pelajaran:</span>
+                    <span id="res-mapel" class="font-bold text-slate-800"></span>
+                </div>
+            </div>
+
+            <!-- Score Display -->
+            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-6 max-w-md mx-auto mb-6 border border-purple-100 flex justify-around items-center text-center">
+                <div>
+                    <p class="text-xs text-slate-500 font-semibold mb-1">NILAI AKHIR</p>
+                    <p id="final-score" class="text-4xl font-extrabold text-indigo-600">0</p>
+                </div>
+                <div class="h-10 w-px bg-purple-200"></div>
+                <div class="space-y-1 text-left text-xs">
+                    <p class="text-emerald-700 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i> Benar: <span id="res-benar" class="font-extrabold text-sm">0</span></p>
+                    <p class="text-rose-600 font-semibold"><i class="fa-solid fa-circle-xmark mr-1"></i> Salah: <span id="res-salah" class="font-extrabold text-sm">0</span></p>
+                    <p class="text-amber-600 font-semibold"><i class="fa-solid fa-forward mr-1"></i> Dilewati: <span id="res-dilewati" class="font-extrabold text-sm">0</span></p>
+                </div>
+            </div>
+
+            <!-- Sending Status Box -->
+            <div id="gas-status-box" class="max-w-md mx-auto mb-6 p-4 rounded-2xl text-xs md:text-sm font-semibold flex items-center justify-center space-x-2 bg-blue-50 text-blue-800 border border-blue-200">
+                <i id="gas-status-icon" class="fa-solid fa-spinner fa-spin"></i>
+                <span id="gas-status-text">Mengirim nilai ke rekap guru...</span>
+            </div>
+
+            <button onclick="restartQuiz()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3.5 px-8 rounded-2xl shadow-lg shadow-indigo-200 transition flex items-center justify-center space-x-2 mx-auto cursor-pointer">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Coba Lagi Kuis</span>
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-4 text-xs text-slate-500 font-medium">
+        Latihan TKA Matematika Kelas 6 SD &bull; Satuan Berat (Ton, Kuintal, Kg, Ons, Gram)
+    </footer>
+
+    <script>
+        // Endpoint Google Apps Script
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyexhoYhE3W4GH3P348_9y7uTvCGIK-cF_m6NB-1d87rwcQtD4cOG3Fyob6zA-UcyHQ/exec";
+
+        // Dataset 20 Soal Pilihan Ganda Biasa
+        const quizData = [
+            { id: 1, text: "2 ton sama dengan ... kg.", options: [{id:'A', text:"200"}, {id:'B', text:"2.000"}, {id:'C', text:"20.000"}, {id:'D', text:"200.000"}], answer: 'B' },
+            { id: 2, text: "1.500 kg setara dengan ... kuintal.", options: [{id:'A', text:"1,5"}, {id:'B', text:"15"}, {id:'C', text:"150"}, {id:'D', text:"1.500"}], answer: 'B' },
+            { id: 3, text: "Hasil dari 4 ton + 7 kuintal adalah ... kg.", options: [{id:'A', text:"4.070"}, {id:'B', text:"4.700"}, {id:'C', text:"4.007"}, {id:'D', text:"4.770"}], answer: 'B' },
+            { id: 4, text: "Ibu membeli 3 kg beras, 500 gram gula, dan 20 ons tepung terigu. Total berat belanjaan ibu adalah ... gram.", options: [{id:'A', text:"3.700"}, {id:'B', text:"4.500"}, {id:'C', text:"5.000"}, {id:'D', text:"5.500"}], answer: 'D' },
+            { id: 5, text: "35.000 gram + 12 kg = ... kg.", options: [{id:'A', text:"36,2"}, {id:'B', text:"47"}, {id:'C', text:"351,2"}, {id:'D', text:"470"}], answer: 'B' },
+            { id: 6, text: "Sebuah truk mengangkut gabah seberat 2,4 ton. Sebanyak 750 kg diturunkan di toko A. Sisa gabah di dalam truk adalah ... kg.", options: [{id:'A', text:"1.450"}, {id:'B', text:"1.650"}, {id:'C', text:"1.750"}, {id:'D', text:"2.325"}], answer: 'B' },
+            { id: 7, text: "45 hg (ons) sama dengan ... gram.", options: [{id:'A', text:"450"}, {id:'B', text:"4.500"}, {id:'C', text:"45.000"}, {id:'D', text:"450.000"}], answer: 'B' },
+            { id: 8, text: "Urutan satuan berat dari yang terbesar ke terkecil yang benar adalah ...", options: [{id:'A', text:"Ton - Kilogram - Kuintal - Ons - Gram"}, {id:'B', text:"Ton - Kuintal - Kilogram - Ons - Gram"}, {id:'C', text:"Kuintal - Ton - Kilogram - Gram - Ons"}, {id:'D', text:"Ton - Kuintal - Ons - Kilogram - Gram"}], answer: 'B' },
+            { id: 9, text: "Pedagang buah memiliki persediaan semangka 1,5 kuintal dan melon 25 kg. Berat seluruh buah adalah ... kg.", options: [{id:'A', text:"40"}, {id:'B', text:"152,5"}, {id:'C', text:"175"}, {id:'D', text:"400"}], answer: 'C' },
+            { id: 10, text: "6.000 ons setara dengan ... kg.", options: [{id:'A', text:"6"}, {id:'B', text:"60"}, {id:'C', text:"600"}, {id:'D', text:"6.000"}], answer: 'C' },
+            { id: 11, text: "Pak Budi memanen ubi sebanyak 1 ton dan jagung 450 kg. Berat seluruh hasil panen dalam kuintal adalah ...", options: [{id:'A', text:"14,5"}, {id:'B', text:"55"}, {id:'C', text:"145"}, {id:'D', text:"550"}], answer: 'A' },
+            { id: 12, text: "0,75 ton + 2.500 gram = ... kg.", options: [{id:'A', text:"752,5"}, {id:'B', text:"775"}, {id:'C', text:"750,25"}, {id:'D', text:"1.000"}], answer: 'A' },
+            { id: 13, text: "Sebuah pabrik memproduksi tepung 3,5 kuintal sehari. Dalam 7 hari, total produksi tepung adalah ... kg.", options: [{id:'A', text:"245"}, {id:'B', text:"2.450"}, {id:'C', text:"24.500"}, {id:'D', text:"245.000"}], answer: 'B' },
+            { id: 14, text: "Bibi mempunyai persediaan gula 2 kg. Gunakan 1.200 gram untuk membuat kue. Sisa gula pasir bibi adalah ... ons.", options: [{id:'A', text:"0,8"}, {id:'B', text:"8"}, {id:'C', text:"80"}, {id:'D', text:"800"}], answer: 'B' },
+            { id: 15, text: "12.000 kg - 35 kuintal = ... ton.", options: [{id:'A', text:"8,5"}, {id:'B', text:"11,65"}, {id:'C', text:"85"}, {id:'D', text:"116,5"}], answer: 'A' },
+            { id: 16, text: "Berat badan Andi 38,5 kg dan berat Budi 3.450 dag (dekagram). Selisih berat badan mereka adalah ... kg.", options: [{id:'A', text:"0,4"}, {id:'B', text:"4"}, {id:'C', text:"35,05"}, {id:'D', text:"40"}], answer: 'B' },
+            { id: 17, text: "Ibu membeli 4 kantong beras, tiap kantong 5 kg. Beras dibagikan ke kantong kecil ukuran 500 gram. Banyak kantong kecil adalah ... buah.", options: [{id:'A', text:"10"}, {id:'B', text:"20"}, {id:'C', text:"40"}, {id:'D', text:"50"}], answer: 'C' },
+            { id: 18, text: "Hasil dari 2 ton - 12 kuintal + 450 kg = ... kg.", options: [{id:'A', text:"850"}, {id:'B', text:"1.250"}, {id:'C', text:"1.450"}, {id:'D', text:"1.650"}], answer: 'B' },
+            { id: 19, text: "Wadah berisi tepung 7,2 kg. Sebanyak 35 ons digunakan memasak. Sisa tepung dalam wadah adalah ... gram.", options: [{id:'A', text:"3.700"}, {id:'B', text:"6.850"}, {id:'C', text:"7.165"}, {id:'D', text:"7.235"}], answer: 'A' },
+            { id: 20, text: "Pak Joko membeli sapi seberat 3,2 kuintal dan kambing 75 kg. Berat total hewan ternak Pak Joko adalah ... kg.", options: [{id:'A', text:"107"}, {id:'B', text:"327,5"}, {id:'C', text:"395"}, {id:'D', text:"1.070"}], answer: 'C' }
+        ];
+
+        // App States
+        let namaSiswa = "";
+        let mataPelajaran = "";
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // { 0: 'B', 1: 'A' }
+        let visitedQuestions = new Set();
+
+        // DOM Elements
+        const loginScreen = document.getElementById('login-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const userBadge = document.getElementById('user-badge');
+        const badgeNamaSiswa = document.getElementById('badge-nama-siswa');
+
+        const currentQNum = document.getElementById('current-q-num');
+        const questionPalette = document.getElementById('question-palette');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const skipBtn = document.getElementById('skip-btn');
+        const submitBtn = document.getElementById('submit-btn');
+
+        function handleStartQuiz(e) {
+            e.preventDefault();
+            namaSiswa = document.getElementById('input-nama').value.trim();
+            mataPelajaran = document.getElementById('input-mapel').value.trim();
+
+            if (!namaSiswa) return;
+
+            badgeNamaSiswa.innerText = namaSiswa;
+            userBadge.classList.remove('hidden');
+            userBadge.classList.add('flex');
+
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            visitedQuestions = new Set([0]);
+
+            loginScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            renderPalette();
+            loadQuestion();
+        }
+
+        function renderPalette() {
+            questionPalette.innerHTML = '';
+            quizData.forEach((_, idx) => {
+                const hasAnswered = userAnswers[idx] !== undefined && userAnswers[idx] !== null;
+                const isVisited = visitedQuestions.has(idx);
+
+                let bgClass = 'bg-slate-200 text-slate-700 font-semibold';
+                if (hasAnswered) {
+                    bgClass = 'bg-indigo-600 text-white font-bold shadow-sm';
+                } else if (isVisited) {
+                    bgClass = 'bg-amber-400 text-amber-950 font-bold';
+                }
+
+                if (idx === currentQuestionIndex) {
+                    bgClass += ' ring-2 ring-purple-600 ring-offset-1';
+                }
+
+                const btn = document.createElement('button');
+                btn.className = `w-7 h-7 sm:w-8 sm:h-8 rounded-xl text-xs flex items-center justify-center transition-all cursor-pointer ${bgClass}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => goToQuestion(idx);
+                questionPalette.appendChild(btn);
+            });
+        }
+
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            visitedQuestions.add(index);
+            renderPalette();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestionIndex];
+            currentQNum.innerText = currentQuestionIndex + 1;
+            questionText.innerHTML = `Soal ${currentQuestionIndex + 1}: ${q.text}`;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach(opt => {
+                const isSelected = userAnswers[currentQuestionIndex] === opt.id;
+
+                let borderClass = isSelected 
+                    ? 'border-indigo-600 bg-indigo-50/90 shadow-md ring-1 ring-indigo-300' 
+                    : 'border-slate-200 bg-white hover:border-indigo-300';
+
+                let checkIndicatorClass = isSelected 
+                    ? 'bg-indigo-600 border-indigo-600 text-white' 
+                    : 'border-slate-300 bg-white text-transparent';
+
+                const optCard = document.createElement('div');
+                optCard.className = `flex items-center justify-between p-3.5 md:p-4 rounded-2xl border-2 cursor-pointer transition-all ${borderClass}`;
+                optCard.onclick = () => selectOption(opt.id);
+
+                optCard.innerHTML = `
+                    <div class="flex items-center space-x-3 flex-grow pr-2">
+                        <span class="font-extrabold text-xs w-7 h-7 rounded-full bg-indigo-100 text-indigo-800 flex items-center justify-center flex-shrink-0">${opt.id}</span>
+                        <span class="text-xs md:text-sm font-semibold text-slate-700">${opt.text}</span>
+                    </div>
+                    <div class="w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all flex-shrink-0 ${checkIndicatorClass}">
+                        <i class="fa-solid fa-check text-xs"></i>
+                    </div>
+                `;
+                optionsContainer.appendChild(optCard);
+            });
+
+            // Nav buttons configuration
+            if (currentQuestionIndex === 0) {
+                prevBtn.classList.add('invisible');
+            } else {
+                prevBtn.classList.remove('invisible');
+            }
+
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtn.classList.add('hidden');
+                skipBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                skipBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function selectOption(optId) {
+            userAnswers[currentQuestionIndex] = optId;
+            renderPalette();
+            loadQuestion();
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                goToQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                goToQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function skipQuestion() {
+            nextQuestion();
+        }
+
+        function calculateScore() {
+            let correctCount = 0;
+            let skippedCount = 0;
+            let wrongCount = 0;
+
+            quizData.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                if (userAns === undefined || userAns === null) {
+                    skippedCount++;
+                } else if (userAns === q.answer) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            const score = (correctCount / quizData.length) * 100;
+            return { score, correctCount, wrongCount, skippedCount };
+        }
+
+        function finishQuiz() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            const { score, correctCount, wrongCount, skippedCount } = calculateScore();
+            const finalScoreVal = Math.round(score);
+
+            document.getElementById('res-nama').innerText = namaSiswa;
+            document.getElementById('res-mapel').innerText = mataPelajaran;
+            document.getElementById('final-score').innerText = finalScoreVal;
+            document.getElementById('res-benar').innerText = correctCount;
+            document.getElementById('res-salah').innerText = wrongCount;
+            document.getElementById('res-dilewati').innerText = skippedCount;
+
+            const predicateEl = document.getElementById('result-predicate');
+            const iconContainer = document.getElementById('result-icon-container');
+
+            if (finalScoreVal >= 85) {
+                predicateEl.innerText = "Sempurna! Luar Biasa!";
+                iconContainer.innerHTML = "🏆";
+                triggerConfetti();
+            } else if (finalScoreVal >= 60) {
+                predicateEl.innerText = "Bagus Sekali!";
+                iconContainer.innerHTML = "🌟";
+                triggerConfetti();
+            } else {
+                predicateEl.innerText = "Tingkatkan Belajar!";
+                iconContainer.innerHTML = "💪";
+            }
+
+            // Post to Google Apps Script
+            sendDataToGAS(namaSiswa, mataPelajaran, finalScoreVal);
+        }
+
+        function sendDataToGAS(nama, mapel, nilai) {
+            const statusBox = document.getElementById('gas-status-box');
+            const statusIcon = document.getElementById('gas-status-icon');
+            const statusText = document.getElementById('gas-status-text');
+
+            statusBox.className = "max-w-md mx-auto mb-6 p-4 rounded-2xl text-xs md:text-sm font-semibold flex items-center justify-center space-x-2 bg-blue-50 text-blue-800 border border-blue-200";
+            statusIcon.className = "fa-solid fa-spinner fa-spin";
+            statusText.innerText = "Mengirim nilai ke rekap guru...";
+
+            const payload = {
+                nama: nama,
+                mataPelajaran: mapel,
+                nilai: nilai
+            };
+
+            fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                statusBox.className = "max-w-md mx-auto mb-6 p-4 rounded-2xl text-xs md:text-sm font-semibold flex items-center justify-center space-x-2 bg-emerald-50 text-emerald-800 border border-emerald-200";
+                statusIcon.className = "fa-solid fa-circle-check text-emerald-600";
+                statusText.innerText = "Nilai berhasil terkirim ke rekap guru!";
+            })
+            .catch(err => {
+                console.error(err);
+                statusBox.className = "max-w-md mx-auto mb-6 p-4 rounded-2xl text-xs md:text-sm font-semibold flex items-center justify-center space-x-2 bg-amber-50 text-amber-800 border border-amber-200";
+                statusIcon.className = "fa-solid fa-circle-exclamation text-amber-600";
+                statusText.innerText = "Koneksi terganggu, namun nilai tetap tercatat.";
+            });
+        }
+
+        function restartQuiz() {
+            userBadge.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+</body>
+</html>
